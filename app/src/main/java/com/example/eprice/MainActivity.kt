@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
-import com.example.scaffold.ui.theme.ScaffoldTheme
+import androidx.compose.material3.Scaffold
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import com.example.eprice.ui.theme.EpriceTheme
@@ -40,17 +40,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ScaffoldTheme {
-                ScaffoldApp()
+            EpriceTheme {
+                EpriceApp()
             }
         }
     }
 }
 
-
-
 @Composable
-fun ScaffoldApp() {
+fun EpriceApp() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
