@@ -1,6 +1,8 @@
 package com.example.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eprice.model.Eprice
@@ -8,23 +10,25 @@ import com.example.eprice.model.EpriceApi
 import kotlinx.coroutines.launch
 
 class EpriceViewModel: ViewModel() {
-    var todos= mutableListOf<Eprice>()
-        private set
+    private val _epriceList = MutableLiveData<List<Eprice>>()
+    val epriceList: LiveData<List<Eprice>> get() = _epriceList
+
 
     init {
-        getTodosList()
+        getEpriceList()
     }
 
-    private fun getTodosList() {
+    private fun getEpriceList() {
         viewModelScope.launch {
             var epriceApi: EpriceApi?= null
             Log.d("EPRICEVIEWMODEL", "trying!")
 
             try {
-                epriceApi = EpriceApi!!.getInstance()
-                todos.clear()
-                todos.addAll(listOf(epriceApi.getEprice()))
                 Log.d("EPRICEVIEWMODEL", "Tauno")
+                epriceApi = EpriceApi.getInstance()
+                val epriceData = epriceApi.getEprice()
+                _epriceList.postValue(epriceData)
+                Log.d("EPRICEVIEWMODEL", "Tauno2")
 
             } catch (e:Exception){
                 Log.d("EPRICEVIEWMODEL - Virhe", e.message.toString())

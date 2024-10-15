@@ -20,7 +20,7 @@ const val BASE_URL = "https://api.porssisahko.net/v1/"
 interface EpriceApi{
  //   @GET("todos")
  @GET("price.json?date=2024-10-15&hour=13")
-    suspend fun getEprice():Eprice
+    suspend fun getEprice():List<Eprice>
 
     companion object {
         var epriceService: EpriceApi? = null

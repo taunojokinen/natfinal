@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -127,25 +128,26 @@ fun ScreenTopBar(title: String, navController: NavController) {
 
 @Composable
 fun MainScreen(navController: NavController,epriceViewModel: EpriceViewModel = viewModel()) {
+    val epriceList by epriceViewModel.epriceList.observeAsState(emptyList())
     Scaffold (
         topBar = { MainTopBar("Sähkön hinta nyt",navController) },
         content = { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
                 Text(text = "Sähkön hinta")
-                priceList(epriceViewModel.todos)
+                priceList(epriceList)
             }
         }
     )
 }
 
 @Composable
-fun priceList(todos:List<Eprice>) {
+fun priceList(eprices:List<Eprice>) {
     LazyColumn(
         modifier = Modifier.padding(8.dp)
     ) {
-        items(todos) {todo ->
+        items(eprices) {eprice ->
             Text(
-                text=todo.price.toString(),
+                text="${eprice.price}",
                 modifier = Modifier.padding(top=4.dp,bottom=4.dp)
             )
             HorizontalDivider(color = Color.LightGray, thickness = 1.dp)
