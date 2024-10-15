@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+import com.example.eprice.model.TodoViewModel
 import com.example.eprice.ui.theme.EpriceTheme
 import com.example.viewmodel.EpriceViewModel
 
@@ -63,7 +64,7 @@ fun EpriceApp() {
             MainScreen(navController)
         }
         composable(route = "Info") {
-            InfoScreen(navController)
+            TestScreen(navController)
         }
         composable(route = "Settings") {
             SettingsScreen(navController)
@@ -152,16 +153,34 @@ fun priceList(todos:List<String>) {
 }
 
 @Composable
-fun InfoScreen(navController: NavController) {
+fun TestScreen(navController: NavController,todoViewModel: TodoViewModel = viewModel() ) {
     Scaffold (
-        topBar = { ScreenTopBar("Info",navController) },
+        topBar = { ScreenTopBar("Testisivu",navController) },
         content = { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
-                Text(text = "Content for info screen")
+                Text(text = "Saa nähä ...")
+                modoList(todoViewModel.modos)
             }
         }
     )
 }
+
+@Composable
+fun modoList(modos:List<String>) {
+    LazyColumn(
+        modifier = Modifier.padding(28.dp)
+    ) {
+        items(modos) {todo ->
+            Text(
+                text=todo,
+                modifier = Modifier.padding(top=4.dp,bottom=24.dp)
+            )
+            HorizontalDivider(color = Color.LightGray, thickness = 1.dp, modifier = Modifier.padding(4.dp))
+        }
+    }
+}
+
+
 
 @Composable
 fun SettingsScreen(navController: NavController) {
