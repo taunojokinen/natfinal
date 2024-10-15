@@ -1,4 +1,4 @@
-package com.example.eprice
+package com.example.eprice.ui
 
 
 import android.os.Bundle
@@ -29,10 +29,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
-import androidx.compose.material3.Scaffold
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import com.example.eprice.ui.theme.EpriceTheme
+import com.example.viewmodel.EpriceViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -72,7 +72,7 @@ fun EpriceApp() {
 fun MainTopBar(title: String, navController: NavController) {
     var expanded by remember { mutableStateOf(false) }
     TopAppBar(
-        title = { Text(text = "My app") },
+        title = { Text(text = "Sähkön hinta nyt") },
 
         actions = {
             IconButton(
@@ -121,19 +121,22 @@ fun ScreenTopBar(title: String, navController: NavController) {
 @Composable
 fun MainScreen(navController: NavController) {
     Scaffold (
-        topBar = {MainTopBar("MyApp",navController)},
+        topBar = { MainTopBar("Sähkön hinta nyt",navController) },
         content = { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
-                Text(text = "Content for main screen")
+                Text(text = "Sähkön hinta nyt")
+                ToDoList(EpriceViewModel.todos)
             }
         }
     )
 }
 
+fun ToDoList(todos:List<String>) {}
+
 @Composable
 fun InfoScreen(navController: NavController) {
     Scaffold (
-        topBar = {ScreenTopBar("Info",navController)},
+        topBar = { ScreenTopBar("Info",navController) },
         content = { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
                 Text(text = "Content for info screen")
@@ -145,7 +148,7 @@ fun InfoScreen(navController: NavController) {
 @Composable
 fun SettingsScreen(navController: NavController) {
     Scaffold (
-        topBar = {ScreenTopBar("Settings",navController)},
+        topBar = { ScreenTopBar("Settings",navController) },
         content = { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
                 Text(text = "Content for settings screen")
