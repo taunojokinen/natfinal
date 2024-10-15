@@ -10,8 +10,8 @@ import com.example.eprice.model.EpriceApi
 import kotlinx.coroutines.launch
 
 class EpriceViewModel: ViewModel() {
-    private val _epriceList = MutableLiveData<List<Eprice>>()
-    val epriceList: LiveData<List<Eprice>> get() = _epriceList
+    private val _epriceList = MutableLiveData<Eprice>()
+    val eprice: LiveData<Eprice> get() = _epriceList
 
 
     init {

@@ -5,7 +5,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,10 +31,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -128,30 +133,36 @@ fun ScreenTopBar(title: String, navController: NavController) {
 
 @Composable
 fun MainScreen(navController: NavController,epriceViewModel: EpriceViewModel = viewModel()) {
-    val epriceList by epriceViewModel.epriceList.observeAsState(emptyList())
+    val eprice by epriceViewModel.eprice.observeAsState()
     Scaffold (
         topBar = { MainTopBar("Sähkön hinta nyt",navController) },
         content = { paddingValues ->
-            Box(modifier = Modifier.padding(paddingValues)) {
-                Text(text = "Sähkön hinta")
-                priceList(epriceList)
+            Column(modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Sähkön hinta", fontSize = 24.sp)
+                eprice?.let { price ->
+                    priceList(price)
+                } ?: Text(text = "Loading...", fontSize = 24.sp)
             }
         }
     )
 }
 
 @Composable
-fun priceList(eprices:List<Eprice>) {
-    LazyColumn(
+fun priceList(eprice: Eprice) {
+    Column(
         modifier = Modifier.padding(8.dp)
     ) {
-        items(eprices) {eprice ->
-            Text(
-                text="${eprice.price}",
-                modifier = Modifier.padding(top=4.dp,bottom=4.dp)
-            )
-            HorizontalDivider(color = Color.LightGray, thickness = 1.dp)
-        }
+        Text(
+            text = "${eprice.price}", fontSize = 24.sp,
+            modifier = Modifier.padding(top = 24.dp, bottom = 24.dp),
+
+        )
+
     }
 }
 
