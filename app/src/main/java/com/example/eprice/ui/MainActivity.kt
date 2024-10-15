@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+import com.example.eprice.model.Eprice
 import com.example.eprice.model.TodoViewModel
 import com.example.eprice.ui.theme.EpriceTheme
 import com.example.viewmodel.EpriceViewModel
@@ -90,7 +91,7 @@ fun MainTopBar(title: String, navController: NavController) {
                 expanded=expanded,
                 onDismissRequest = {expanded=false}) {
                 DropdownMenuItem(
-                    text = { Text("info")},
+                    text = { Text("Testisivu")},
                     onClick={navController.navigate("info")})
 
 
@@ -138,13 +139,13 @@ fun MainScreen(navController: NavController,epriceViewModel: EpriceViewModel = v
 }
 
 @Composable
-fun priceList(todos:List<String>) {
+fun priceList(todos:List<Eprice>) {
     LazyColumn(
         modifier = Modifier.padding(8.dp)
     ) {
         items(todos) {todo ->
             Text(
-                text=todo,
+                text=todo.price.toString(),
                 modifier = Modifier.padding(top=4.dp,bottom=4.dp)
             )
             HorizontalDivider(color = Color.LightGray, thickness = 1.dp)

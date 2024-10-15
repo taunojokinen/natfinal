@@ -3,11 +3,12 @@ package com.example.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.eprice.model.Eprice
 import com.example.eprice.model.EpriceApi
 import kotlinx.coroutines.launch
 
 class EpriceViewModel: ViewModel() {
-    var todos= mutableListOf<String>()
+    var todos= mutableListOf<Eprice>()
         private set
 
     init {
@@ -17,12 +18,16 @@ class EpriceViewModel: ViewModel() {
     private fun getTodosList() {
         viewModelScope.launch {
             var epriceApi: EpriceApi?= null
+            Log.d("EPRICEVIEWMODEL", "trying!")
+
             try {
                 epriceApi = EpriceApi!!.getInstance()
                 todos.clear()
-                todos.addAll(epriceApi.getEprice())
+                todos.addAll(listOf(epriceApi.getEprice()))
+                Log.d("EPRICEVIEWMODEL", "Tauno")
+
             } catch (e:Exception){
-                Log.d("EPRICEVIEWMODEL", e.message.toString())
+                Log.d("EPRICEVIEWMODEL - Virhe", e.message.toString())
             }
         }
     }
