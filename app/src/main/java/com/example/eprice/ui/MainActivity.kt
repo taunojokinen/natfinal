@@ -181,12 +181,16 @@ fun TestScreen(navController: NavController,todoViewModel: TodoViewModel = viewM
 
 @Composable
 fun modoList(modos:List<String>) {
+    val dateAndHour = TodoViewModel.getCurrentDateAndHour()
     LazyColumn(
         modifier = Modifier.padding(28.dp)
+
     ) {
+        //Add date and hour here
         items(modos) {todo ->
+
             Text(
-                text=todo,
+                text="$todo - $dateAndHour",
                 modifier = Modifier.padding(top=4.dp,bottom=24.dp)
             )
             HorizontalDivider(color = Color.LightGray, thickness = 1.dp, modifier = Modifier.padding(4.dp))
