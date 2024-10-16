@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -144,7 +145,7 @@ fun MainScreen(navController: NavController,epriceViewModel: EpriceViewModel = v
                 Text(text = stringResource(R.string.s_hk_n_hinta), fontSize = 24.sp)
                 eprice?.let { price ->
                     priceList(price)
-                } ?: Text(text = "Loading...", fontSize = 24.sp)
+                } ?: CircularProgressIndicator() // Replace "Loading..." with a CircularProgressIndicator
                 Text(text = stringResource(R.string.centti), fontSize = 24.sp)
             }
         }

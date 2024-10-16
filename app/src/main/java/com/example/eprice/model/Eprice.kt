@@ -12,18 +12,14 @@ import retrofit2.http.Query
 
 data class Eprice(
     var price: Float
-//    var userId: Int,
-//    var id: Int,
-//    var title: String,
-//    var comleted: Boolean
 )
 
 const val BASE_URL = "https://api.porssisahko.net/v1/"
-//const val BASE_URL = "https://jsonplaceholder.typicode.com/"
+
 
 
 interface EpriceApi{
- //   @GET("todos")
+
  @GET("price.json?")
     suspend fun getEprice(@Query("date") date: String, @Query("hour") hour: String): Eprice
 

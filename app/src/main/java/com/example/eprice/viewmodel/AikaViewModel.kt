@@ -10,8 +10,6 @@ import java.time.format.DateTimeFormatter
 
 class AikaViewModel : ViewModel() {
 
-    val modos = mutableListOf<String>()
-
         companion object {
             @RequiresApi(Build.VERSION_CODES.O)
             fun getCurrentDateAndHour(): String {
