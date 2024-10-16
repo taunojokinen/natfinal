@@ -1,17 +1,17 @@
 package com.example.eprice.ui
 
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,13 +43,15 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+import com.example.eprice.R
 import com.example.eprice.model.Eprice
-import com.example.eprice.model.TodoViewModel
+import com.example.eprice.viewmodel.AikaViewModel
 import com.example.eprice.ui.theme.EpriceTheme
-import com.example.viewmodel.EpriceViewModel
+import com.example.eprice.viewmodel.EpriceViewModel
 
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -60,6 +63,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EpriceApp() {
     val navController = rememberNavController()
@@ -70,11 +74,8 @@ fun EpriceApp() {
         composable(route = "Home") {
             MainScreen(navController)
         }
-        composable(route = "Info") {
-            TestScreen(navController)
-        }
-        composable(route = "Settings") {
-            SettingsScreen(navController)
+        composable(route = "Aika") {
+            TimeScreen(navController)
         }
 
     }
@@ -85,7 +86,7 @@ fun EpriceApp() {
 fun MainTopBar(title: String, navController: NavController) {
     var expanded by remember { mutableStateOf(false) }
     TopAppBar(
-        title = { Text(text = "Sähkön hinta nyt") },
+        title = { Text(text = stringResource(R.string.s_hk_n_hinta_nyt)) },
 
         actions = {
             IconButton(
@@ -97,13 +98,9 @@ fun MainTopBar(title: String, navController: NavController) {
                 expanded=expanded,
                 onDismissRequest = {expanded=false}) {
                 DropdownMenuItem(
-                    text = { Text("Testisivu")},
-                    onClick={navController.navigate("info")})
+                    text = { Text("Aika")},
+                    onClick={navController.navigate("aika")})
 
-
-                DropdownMenuItem(
-                    text = { Text("settings")},
-                    onClick={navController.navigate("settings")})
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -120,22 +117,23 @@ fun ScreenTopBar(title: String, navController: NavController) {
         title = { Text(title) },
         navigationIcon = {
             IconButton(onClick = {navController.navigateUp()}) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFF90EE90) ,
-            titleContentColor = Color.Black
+            containerColor = Color(0xFF8a2be2) ,
+            titleContentColor = Color.White
         )
 
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(navController: NavController,epriceViewModel: EpriceViewModel = viewModel()) {
     val eprice by epriceViewModel.eprice.observeAsState()
     Scaffold (
-        topBar = { MainTopBar("Sähkön hinta nyt",navController) },
+        topBar = { MainTopBar(title = "Sähkön hinta nyt", navController = navController) },
         content = { paddingValues ->
             Column(modifier = Modifier
                 .padding(paddingValues)
@@ -143,10 +141,11 @@ fun MainScreen(navController: NavController,epriceViewModel: EpriceViewModel = v
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Sähkön hinta", fontSize = 24.sp)
+                Text(text = stringResource(R.string.s_hk_n_hinta), fontSize = 24.sp)
                 eprice?.let { price ->
                     priceList(price)
                 } ?: Text(text = "Loading...", fontSize = 24.sp)
+                Text(text = stringResource(R.string.centti), fontSize = 24.sp)
             }
         }
     )
@@ -162,39 +161,43 @@ fun priceList(eprice: Eprice) {
             modifier = Modifier.padding(top = 24.dp, bottom = 24.dp),
 
         )
-
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TestScreen(navController: NavController,todoViewModel: TodoViewModel = viewModel() ) {
+fun TimeScreen(navController: NavController,todoViewModel: AikaViewModel = viewModel() ) {
     Scaffold (
-        topBar = { ScreenTopBar("Testisivu",navController) },
+        topBar = { ScreenTopBar("Aika",navController) },
         content = { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
-                Text(text = "Saa nähä ...")
-                modoList(todoViewModel.modos)
+                timeStamp()
             }
         }
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun modoList(modos:List<String>) {
-    val dateAndHour = TodoViewModel.getCurrentDateAndHour()
-    LazyColumn(
-        modifier = Modifier.padding(28.dp)
+fun timeStamp() {
+    val dateAndHour = AikaViewModel.getCurrentDateHourAndMinute()
+    Column(Modifier
+        .padding(24.dp)
+        .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
 
     ) {
-        //Add date and hour here
-        items(modos) {todo ->
+        HorizontalDivider(color = Color.LightGray, thickness = 1.dp, modifier = Modifier.padding(4.dp))
+        Text(
+                text="$dateAndHour",
+                fontSize = 24.sp,
+                modifier = Modifier
+                    .padding(top=24.dp,bottom=24.dp)
 
-            Text(
-                text="$todo - $dateAndHour",
-                modifier = Modifier.padding(top=4.dp,bottom=24.dp)
             )
             HorizontalDivider(color = Color.LightGray, thickness = 1.dp, modifier = Modifier.padding(4.dp))
-        }
+
     }
 }
 
