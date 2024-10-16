@@ -1,6 +1,5 @@
 package com.example.eprice.viewmodel
 
-
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
@@ -24,7 +23,7 @@ class AikaViewModel : ViewModel() {
                 val finnishTime = ZonedDateTime.now(ZoneId.of("Europe/Helsinki"))
                 val date = finnishTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 val hour = finnishTime.format(DateTimeFormatter.ofPattern("HH"))
-                val minute=finnishTime.minute
+                val minute=finnishTime.format(DateTimeFormatter.ofPattern("mm"))
                 return "$date $hour $minute"
             }
         }

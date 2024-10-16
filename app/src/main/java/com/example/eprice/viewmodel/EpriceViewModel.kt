@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eprice.model.Eprice
 import com.example.eprice.model.EpriceApi
-import com.example.eprice.viewmodel.AikaViewModel
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -17,21 +16,24 @@ class EpriceViewModel: ViewModel() {
     private val _epriceList = MutableLiveData<Eprice>()
     val eprice: LiveData<Eprice> get() = _epriceList
 
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> get() = _errorMessage
+
 
     init {
         getEpriceList()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getEpriceList() {
+    fun getEpriceList() {
         viewModelScope.launch {
-            var epriceApi: EpriceApi?= null
+            val epriceApi: EpriceApi?
             Log.d("EPRICEVIEWMODEL", "trying!")
 
             try {
                 Log.d("EPRICEVIEWMODEL", "Tauno")
                 epriceApi = EpriceApi.getInstance()
-                val currentDateAndHour = AikaViewModel.getCurrentDateAndHour() as String
+                val currentDateAndHour = AikaViewModel.getCurrentDateAndHour()
                 val (date, hour) = currentDateAndHour.split("&").map { it.split("=")[1] }
                 val epriceData = epriceApi.getEprice(date, hour)
                 _epriceList.postValue(epriceData)
@@ -39,6 +41,7 @@ class EpriceViewModel: ViewModel() {
 
             } catch (e:Exception){
                 Log.d("EPRICEVIEWMODEL - Virhe", e.message.toString())
+                _errorMessage.postValue(e.message) // Post the error message
             }
         }
     }

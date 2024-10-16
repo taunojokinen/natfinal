@@ -23,7 +23,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -36,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,7 +50,6 @@ import com.example.eprice.model.Eprice
 import com.example.eprice.viewmodel.AikaViewModel
 import com.example.eprice.ui.theme.EpriceTheme
 import com.example.eprice.viewmodel.EpriceViewModel
-
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -133,6 +133,8 @@ fun ScreenTopBar(title: String, navController: NavController) {
 @Composable
 fun MainScreen(navController: NavController,epriceViewModel: EpriceViewModel = viewModel()) {
     val eprice by epriceViewModel.eprice.observeAsState()
+    val errorMessage by epriceViewModel.errorMessage.observeAsState()
+
     Scaffold (
         topBar = { MainTopBar(title = "Sähkön hinta nyt", navController = navController) },
         content = { paddingValues ->
@@ -144,16 +146,29 @@ fun MainScreen(navController: NavController,epriceViewModel: EpriceViewModel = v
             ) {
                 Text(text = stringResource(R.string.s_hk_n_hinta), fontSize = 24.sp)
                 eprice?.let { price ->
-                    priceList(price)
-                } ?: CircularProgressIndicator() // Replace "Loading..." with a CircularProgressIndicator
+                    Price(price)
+                } ?: CircularProgressIndicator()
                 Text(text = stringResource(R.string.centti), fontSize = 24.sp)
+
+                errorMessage?.let {
+                    Snackbar(
+                        modifier = Modifier.padding(16.dp),
+                        action = {
+                            TextButton(onClick = { epriceViewModel.getEpriceList() }) {
+                                Text("Retry")
+                            }
+                        }
+                    ) {
+                        Text(text = it)
+                    }
+                }
             }
         }
     )
 }
 
 @Composable
-fun priceList(eprice: Eprice) {
+fun Price(eprice: Eprice) {
     Column(
         modifier = Modifier.padding(8.dp)
     ) {
@@ -167,7 +182,7 @@ fun priceList(eprice: Eprice) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TimeScreen(navController: NavController,todoViewModel: AikaViewModel = viewModel() ) {
+fun TimeScreen(navController: NavController,aikaViewModel: AikaViewModel = viewModel() ) {
     Scaffold (
         topBar = { ScreenTopBar("Aika",navController) },
         content = { paddingValues ->
@@ -204,32 +219,3 @@ fun timeStamp() {
 
 
 
-@Composable
-fun SettingsScreen(navController: NavController) {
-    Scaffold (
-        topBar = { ScreenTopBar("Settings",navController) },
-        content = { paddingValues ->
-            Box(modifier = Modifier.padding(paddingValues)) {
-                Text(text = "Content for settings screen")
-            }
-        }
-    )
-}
-
-
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    EpriceTheme {
-        Greeting("Android")
-    }
-}

@@ -1,6 +1,5 @@
 package com.example.eprice.model
 
-import android.icu.text.CaseMap.Title
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -16,15 +15,13 @@ data class Eprice(
 
 const val BASE_URL = "https://api.porssisahko.net/v1/"
 
-
-
 interface EpriceApi{
 
  @GET("price.json?")
     suspend fun getEprice(@Query("date") date: String, @Query("hour") hour: String): Eprice
 
     companion object {
-        var epriceService: EpriceApi? = null
+        private var epriceService: EpriceApi? = null
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun getInstance(): EpriceApi {
